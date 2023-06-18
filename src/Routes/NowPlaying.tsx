@@ -3,7 +3,7 @@ import {
   IMovie,
   IMovieDetail,
   getMovie,
-  getPopular,
+  getNowPlaying,
   makeImagePath,
 } from "../api";
 import styled from "styled-components";
@@ -26,7 +26,6 @@ const Card = styled(motion.div)`
   font-weight: bold;
   overflow: auto;
 `;
-
 const Img = styled(motion.div)<{ bgPhoto: string }>`
   background-color: white;
   background-image: url(${(props) => props.bgPhoto});
@@ -120,12 +119,13 @@ const bigMovieVariants = {
   },
 };
 
-function Home() {
+function NowPlaying() {
   const history = useHistory();
-  const bigMovieMatch = useRouteMatch<{ movieId: string }>("/movies/:movieId");
-  const { data } = useQuery(["movie", "popular"], getPopular);
-
-  const onOverlayClick = () => history.push("/");
+  const bigMovieMatch = useRouteMatch<{ movieId: string }>(
+    "/nowPlaying/movies/:movieId"
+  );
+  const { data } = useQuery(["movie", "NowPlaying"], getNowPlaying);
+  const onOverlayClick = () => history.push("/nowPlaying");
   const { scrollY } = useViewportScroll();
 
   const clickedMovie =
@@ -136,7 +136,7 @@ function Home() {
 
   const [movieData, setMovieData] = useState<IMovieDetail>();
   const onCardClicked = async (movieId: number) => {
-    history.push(`/movies/${movieId}`);
+    history.push(`/nowPlaying/movies/${movieId}`);
     const newMovieData = await getMovie(movieId.toString());
     setMovieData(newMovieData);
   };
@@ -211,7 +211,7 @@ function Home() {
                       <li>Revenue: {movieData?.revenue}</li>
                       <li>Runtime: {movieData?.runtime}</li>
                       <li>Rating: {movieData?.vote_average}</li>
-                      <li>Homepage: {movieData?.homepage}</li>
+                      <li>ComingSoonpage: {movieData?.homepage}</li>
                     </ul>
                   </BigOverview>
                 </>
@@ -224,4 +224,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default NowPlaying;
